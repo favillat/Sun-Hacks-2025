@@ -21,10 +21,18 @@
     #mapid {
       height: 100vh;
     }
-
+    
     .leaflet-control-time.leaflet-control {
+      display: flex;
+      direction: row;
+      flex-direction: row;
+      margin-top: 300px;
       padding: 20px;
-      background-color: white;
+      border-radius: 10px;
+      background-color: rgba(240, 240, 240, 0.85);
+    }
+    .leaflet-control-time button {
+      padding: 1px;
     }
 
     #exposure-gradient-container {
@@ -54,19 +62,22 @@
     #time-display {
       position: absolute;
       top: 10px;
-      right: 10px;
-      background-color: white;
-      padding: 5px 10px;
-      border-radius: 4px;
+      right: auto;
+      margin-left: 10px;
+
+      background-color: rgba(240, 240, 240, 0.85);
+      padding:10px;
+      border-radius: 10px;
       font-weight: bold;
       font-family: sans-serif;
       z-index: 1000;
     }
     .route-controls {
       position: absolute;
-      top: 60px;
-      right: 10px;
-      background: white;
+      border-radius: 10px;
+      top: 2%;
+      right: 1%;
+      background: rgba(240, 240, 240, 0.85);
       padding: 10px;
       border-radius: 4px;
       font-family: sans-serif;
@@ -76,16 +87,18 @@
     }
     .route-controls input, .route-controls button, .route-controls label {
       width: 100%;
-      margin: 6px 0;
+      margin-bottom: 9px;
+      padding: 3px;
       box-sizing: border-box;
+      border: none;
     }
     .legend {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: white;
-      padding: 8px 10px;
-      border-radius: 4px;
+      bottom: 4.5%;
+      left: 87%;
+      background: rgba(240, 240, 240, 0.85);
+      padding: 10px;
+      border-radius: 10px;
       font-family: sans-serif;
       z-index: 1000;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
@@ -101,6 +114,16 @@
       width: 80px;
       height: auto;
     }
+
+    #route-btn {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 7px;
+      font-weight: bold;
+      border-radius: 20px;
+    }
   </style>
   <title>Live Sunlight, Shadows, and Routes</title>
 </head>
@@ -113,21 +136,15 @@
     <input id="end-input" type="text" placeholder="End, e.g., Hayden Library ASU" />
     <label><input id="prefer-shade" type="checkbox" checked /> Prefer shade</label>
     <button id="route-btn">Find walking routes</button>
-  </div>
-  <div class="legend">
-    <div><span class="swatch" style="background:#1976d2"></span> Best route</div>
-    <div><span class="swatch" style="background:#9e9e9e"></span> Alternative</div>
-  </div>
-  <div id="mapid"></div>
-  <div class="leaflet-control-container">
+
+    <div class="leaflet-control-container">
     <div class="leaflet-top leaflet-left">
       <div class="leaflet-control-time leaflet-control">
-        <button id="decrement">-1 hour</button>
-        <button id="increment">+1 hour</button>
+        <button id="increment">+</button>
         <button id="play">Play</button>
         <button id="stop">Stop</button>
-        <label><input id="exposure" type="checkbox" autocomplete="off" />Full-day sun exposure</label>
-        <span id="loader" style="padding: 3px;"></span>
+        <button id="decrement">-</button>
+        <label><input id="exposure" type="checkbox" autocomplete="off"/>Sun Exposure</label>
       </div>
       <div class="leaflet-control-time leaflet-control" id="exposure-gradient-container">
         <div>Hours of sunlight</div>
@@ -135,6 +152,14 @@
       </div>
     </div>
   </div>
+  </div>
+  
+  <div class="legend">
+    <div><span class="swatch" style="background:#1976d2"></span> Best route</div>
+    <div><span class="swatch" style="background:#9e9e9e"></span> Alternative</div>
+  </div>
+  <div id="mapid"></div>
+  
 
   <script>
     /* Leaflet setup */
