@@ -127,43 +127,7 @@
   </div>
 
   <script>
-    function addImageMarker(lat, lng, imageUrl, opts = {}) {
-      const {
-        iconSize = [32, 32],
-        iconAnchor = [16, 32],
-        popupText,
-        pane = 'markerPane',
-        zIndexOffset = 0,
-        draggable = false,
-        className
-      } = opts;
-
-      if (pane !== 'markerPane' && !map.getPane(pane)) {
-        map.createPane(pane);
-        map.getPane(pane).style.zIndex = 650;
-      }
-
-      const popupAnchor = [0, -Math.max(0, iconSize[1] - iconAnchor[1])];
-
-      const icon = L.icon({
-        iconUrl: imageUrl,
-        iconSize,
-        iconAnchor,
-        popupAnchor,
-        className
-      });
-
-      const marker = L.marker([lat, lng], {
-        icon,
-        pane,
-        zIndexOffset,
-        draggable
-      }).addTo(map);
-
-      if (popupText) marker.bindPopup(popupText);
-
-      return marker;
-    }
+    
     /* Leaflet setup */
     var map = L.map("mapid", { zoomControl: false }).setView([47.6062, -122.3321], 14); // fallback Seattle
     const increment = document.getElementById('increment');
@@ -281,6 +245,7 @@
       loaderEl.innerText = '';
     });
 
+    
     async function fetchBuildingsForBounds(north, south, east, west) {
       try {
         const query = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(way["building"](${south},${west},${north},${east}););out body;>;out skel qt;`;
@@ -306,15 +271,11 @@
       }
     }
 
-    const loadWaterMarkers = () => {
-      addImageMarker(
-      33.4212, -111.9332,
-      'assets/water-circle.png')
+   
       
       
-    }
     
-    loadWaterMarkers();
+    
 
     function decodeRouteToLatLngs(route) {
       if (route.overview_path && route.overview_path.length) {
