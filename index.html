@@ -11,9 +11,10 @@
   <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
   <script src="https://unpkg.com/osmtogeojson/osmtogeojson.js"></script>
   <script src="https://unpkg.com/leaflet-shadow-simulator/dist/leaflet-shadow-simulator.umd.min.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAooLbj4D5s7PWTL5-Q_j1Pl7VN7NzKdHY&libraries=places,geometry&callback=initGoogle"></script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAooLbj4D5s7PWTL5-Q_j1Pl7VN7NzKdHY&libraries=places,geometry&callback=initGoogle"></script>
   <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
-  
+
   <title>Live Sunlight, Shadows, and Routes</title>
 </head>
 
@@ -21,7 +22,7 @@
   <div id="time-display"></div>
   <div class="route-controls">
     <strong class="">Route</strong>
-    
+
     <input id="start-input" type="text" placeholder="Start, e.g., SDFC ASU" />
     <input id="end-input" type="text" placeholder="End, e.g., Hayden Library ASU" />
     <label><input id="prefer-shade" type="checkbox" checked /> Prefer shade</label>
@@ -143,12 +144,83 @@
       return marker;
     }
 
-    addImageMarker(33.424564, -111.938953, 'assets/sporky.png', {
-      iconSize: [48, 48],
-      iconAnchor: [24, 48],
-      popupText: 'Sporky the Sun Devil',
-      zIndexOffset: 1000
-    });
+    function drawWater() {
+      fetch('./waterStations.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(jsonData => {
+          for (let i = 0; i < jsonData.features.length; i++) {
+            if (jsonData.features[i].geometry.x !== "NaN" && jsonData.features[i].geometry.y !== "NaN") {
+              addImageMarker(jsonData.features[i].geometry.y, jsonData.features[i].geometry.x, 'assets/water-circle.png', {
+                iconSize: [48, 48],
+                iconAnchor: [24, 48],
+                popupText: 'water',
+                zIndexOffset: 1001
+              });
+            }
+
+          }
+        })
+        .catch(error => { console.error('Error fetching or parsing JSON:'.error); })
+    }
+
+    drawWater()
+
+    function drawEmer() {
+      fetch('./emergencyCallBoxes.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(jsonData => {
+          for (let i = 0; i < jsonData.features.length; i++) {
+            if (jsonData.features[i].geometry.y !== "NaN") {
+              addImageMarker(jsonData.features[i].geometry.y, jsonData.features[i].geometry.x, 'assets/emergency_pin.png', {
+                iconSize: [48, 48],
+                iconAnchor: [24, 48],
+                popupText: 'emer',
+                zIndexOffset: 1001
+              });
+            }
+
+          }
+        })
+        .catch(error => { console.error('Error fetching or parsing JSON:'.error); })
+    }
+
+    drawEmer()
+
+    function drawPolice() {
+      fetch('./policeStations.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(jsonData => {
+          for (let i = 0; i < jsonData.features.length; i++) {
+            if (jsonData.features[i].geometry.y !== "NaN") {
+              addImageMarker(jsonData.features[i].geometry.y, jsonData.features[i].geometry.x, 'assets/police_pin.png', {
+                iconSize: [48, 48],
+                iconAnchor: [24, 48],
+                popupText: 'popo',
+                zIndexOffset: 1001
+              });
+            }
+
+          }
+        })
+        .catch(error => { console.error('Error fetching or parsing JSON:'.error); })
+    }
+
+    drawPolice()
 
     function stopBaseClock() {
       if (baseTimerId) {
@@ -192,7 +264,7 @@
                 const line = turf.polygonToLine({ type: 'Feature', properties: {}, geometry: g });
                 if (line.type === 'Feature') BUILDING_LINES.push(line);
                 if (line.type === 'FeatureCollection') BUILDING_LINES.push(...line.features);
-              } catch (_) {}
+              } catch (_) { }
             }
           });
           geojson.features.forEach(feature => {
@@ -227,7 +299,7 @@
               const line = turf.polygonToLine({ type: 'Feature', properties: {}, geometry: g });
               if (line.type === 'Feature') BUILDING_LINES.push(line);
               if (line.type === 'FeatureCollection') BUILDING_LINES.push(...line.features);
-            } catch (_) {}
+            } catch (_) { }
           }
         });
         return true;
@@ -275,7 +347,7 @@
         if (shadeMap && typeof shadeMap.getShadowFeatures === 'function') {
           shadowFeatures = shadeMap.getShadowFeatures();
         }
-      } catch (_) {}
+      } catch (_) { }
 
       if (shadowFeatures && shadowFeatures.features && shadowFeatures.features.length) {
         let inShadow = 0;
@@ -289,7 +361,7 @@
                 inShadow++;
                 break;
               }
-            } catch (_) {}
+            } catch (_) { }
           }
           total++;
         }
@@ -311,7 +383,7 @@
             if (snapped && snapped.properties && typeof snapped.properties.dist === 'number') {
               if (snapped.properties.dist < best) best = snapped.properties.dist;
             }
-          } catch (_) {}
+          } catch (_) { }
         }
         if (isFinite(best)) { total += best; count++; }
       }
@@ -363,7 +435,7 @@
       drawRoutes(result, preferShade);
     }
 
-    window.initGoogle = function() {
+    window.initGoogle = function () {
       // called by Google JS API once loaded
       directionsService = new google.maps.DirectionsService();
       const acOptions = { fields: ["geometry", "name", "formatted_address"], componentRestrictions: { country: "us" } };
@@ -497,8 +569,8 @@
   </script>
 </body>
 
-  <div id="sporky-gif">
-    <img src="sporky.gif" alt="Sporky Mascot" />
-  </div>
+<div id="sporky-gif">
+  <img src="sporky.gif" alt="Sporky Mascot" />
+</div>
 
 </html>

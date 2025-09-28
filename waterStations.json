@@ -56,7 +56,7 @@
                 "Description": "water bottle filling station",
                 "Type_Desc": "Drinking Fountain - Dual, Bottle Filler"
             },
-            "geometry": {
+            "": {
                 "x": "NaN",
                 "y": "NaN"
             }

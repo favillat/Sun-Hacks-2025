@@ -22,13 +22,14 @@ def fetch_all_services(SERVICE_ID, OUTFILE):
 
 # Gets Water Filling Stations
 fetch_all_services(15, "waterStations.json")
-with open("waterStations.json", 'r', encoding='utf-8') as f:
-    data = json.load(f)
-    features = data['features']
-    for feature in features:
-        buildingName = feature['attributes']['BLDG_NAME']
-        if buildingName is None:
-            print(feature, "\n") 
+#with open("waterStations.json", 'r', encoding='utf-8') as f:
+    #data = json.load(f)
+    #features = data['features']
+    #for feature in features:
+        #buildingName = feature['attributes']['BLDG_NAME']
+        #if buildingName is None:
+            #print(feature, "\n") 
+
 
 # Gets Emergency Call Boxes
 fetch_all_services(4, "emergencyCallBoxes.json")
