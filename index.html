@@ -19,7 +19,8 @@
 </head>
 
 <body>
-  <div id="time-display"></div>
+
+
   <div class="route-controls">
     <strong class="">Route</strong>
 
@@ -35,6 +36,7 @@
     </div>
     <button id="route-btn">Find Shaded Routes</button>
   </div>
+
   <div class="legend">
     <div><span class="swatch" style="background:#1976d2"></span> Best route</div>
     <div><span class="swatch" style="background:#9e9e9e"></span> Alternative</div>
@@ -70,11 +72,8 @@
         <!-- <label><input id="exposure" type="checkbox" autocomplete="off" />Full-day sun exposure</label> -->
         <span id="loader" style="padding: 3px;"></span>
       </div>
-      <div class="leaflet-control-time leaflet-control" id="exposure-gradient-container">
-        <div>Hours of sunlight</div>
-        <div id="exposure-gradient"></div>
-      </div>
     </div>
+
   </div>
 
   <script>
@@ -440,7 +439,7 @@
       try {
         const result = await requestRoutes(origin, destination);
         lastDirectionsResult = result;
-        await renderRoutesWithShade(result,preferShadeChk.value==='Shade');
+        await renderRoutesWithShade(result, preferShadeChk.value === 'Shade');
         loaderEl.innerText = '';
       } catch (err) {
         console.error(err);
@@ -454,7 +453,7 @@
     preferShadeChk.addEventListener('change', async () => {
       if (lastDirectionsResult) {
         loaderEl.innerText = 'Scoring...';
-        await renderRoutesWithShade(lastDirectionsResult, preferShadeChk.value !=='Shade');
+        await renderRoutesWithShade(lastDirectionsResult, preferShadeChk.value !== 'Shade');
         loaderEl.innerText = '';
       }
     });
@@ -528,7 +527,9 @@
 </body>
 
 <div id="sporky-gif">
-  <img src="sporky.gif" alt="Sporky Mascot" />
+  <button onclick="" style="background-color: transparent; border: none;">
+    <img src="sporky.gif" alt="Sporky Mascot" />
+  </button>
 </div>
 
 </html>
