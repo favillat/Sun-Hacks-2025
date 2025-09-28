@@ -154,7 +154,7 @@
         })
         .then(jsonData => {
           for (let i = 0; i < jsonData.features.length; i++) {
-            if (jsonData.features[i].geometry.x !== "NaN" && jsonData.features[i].geometry.y !== "NaN") {
+            if (jsonData.features[i].geometry.y !== "NaN") {
               addImageMarker(jsonData.features[i].geometry.y, jsonData.features[i].geometry.x, 'assets/water-circle.png', {
                 iconSize: [48, 48],
                 iconAnchor: [24, 48],
@@ -162,7 +162,7 @@
                 zIndexOffset: 1001
               });
             }
-
+            
           }
         })
         .catch(error => { console.error('Error fetching or parsing JSON:'.error); })
