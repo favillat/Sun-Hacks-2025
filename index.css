@@ -103,7 +103,7 @@ body {
       image-rendering: pixelated; 
     }
     #sporky-gif img {
-      width: 425%;
+      width: 80%;
       image-rendering: pixelated;      
       height: auto;
     }
