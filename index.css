@@ -59,12 +59,11 @@ body {
     }
     .route-controls {
       position: absolute;
-      border-radius: 10px;
       top: 2%;
       right: 1%;
       background: rgba(240, 240, 240, 0.85);
-      padding: 10px;
-      border-radius: 4px;
+      padding: 20px;
+      border-radius: 10px;
       font-family: sans-serif;
       z-index: 1000;
       width: 280px;
@@ -73,14 +72,16 @@ body {
     .route-controls input, .route-controls button {
       width: 100%;
       margin-bottom: 9px;
-      padding: 3px;
+      padding: 10px 7px;
       box-sizing: border-box;
+      border-radius: 5px;
+      background-color: rgba(240, 240, 240, 0.5);
       border: none;
     }
     .route-controls label{
       font-size: 0.9em;
       user-select: none;
-      margin-bottom: 100px;
+      margin-bottom: 10px;
     }
     .legend {
       position: absolute;
@@ -109,10 +110,10 @@ body {
 
     #route-btn {
       background-color: #1976d2;
-      color: white;
+      color: rgb(240, 240, 240);
       border: none;
       cursor: pointer;
-      padding: 7px;
+      padding: 12px 6px;
       font-weight: bold;
       border-radius: 20px;
     }
