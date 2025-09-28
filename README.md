@@ -6,6 +6,7 @@ A Tamagotchi-inspired, on-screen buddy that keeps you safe, shaded, and hydrated
 - Safe Route: stay near blue-light Emergency stations.
 - Hydrated Route: pass fountains, bottle fillers, and refreshers.
 - Shady Route: choose cooler paths with higher shade scores.
+- Tap Sporky to expand full screen; docked Sporky chills with idle animations.
 - Weather-wise tips: “103 outside, make sure to drink water.” (Tempe-aware)
 - Mix & match any combo of the three routing modes.
 
