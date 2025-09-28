@@ -11,9 +11,10 @@
   <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
   <script src="https://unpkg.com/osmtogeojson/osmtogeojson.js"></script>
   <script src="https://unpkg.com/leaflet-shadow-simulator/dist/leaflet-shadow-simulator.umd.min.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAooLbj4D5s7PWTL5-Q_j1Pl7VN7NzKdHY&libraries=places,geometry&callback=initGoogle"></script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAooLbj4D5s7PWTL5-Q_j1Pl7VN7NzKdHY&libraries=places,geometry&callback=initGoogle"></script>
   <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
-  
+
   <title>Live Sunlight, Shadows, and Routes</title>
 </head>
 
@@ -21,11 +22,18 @@
   <div id="time-display"></div>
   <div class="route-controls">
     <strong class="">Route</strong>
-    
-    <input id="start-input" type="text" placeholder="Start, e.g., SDFC ASU" />
-    <input id="end-input" type="text" placeholder="End, e.g., Hayden Library ASU" />
-    <label><input id="prefer-shade" type="checkbox" checked /> Prefer shade</label>
-    <button id="route-btn">Find walking routes</button>
+
+    <input id="start-input" type="text" placeholder="Startpoint" />
+    <input id="end-input" type="text" placeholder="Endpoint" />
+    <div class="sun-exposure-control">
+      <label for="pick-map-type">Prefer </label>
+      <select name="pick-map-type" id="prefer-shade">
+        <option value="Shade">Shade</option>
+        <option value="Safety">Safety</option>
+        <option value="Speed">Speed</option>
+      </select>
+    </div>
+    <button id="route-btn">Find Shaded Routes</button>
   </div>
   <div class="legend">
     <div><span class="swatch" style="background:#1976d2"></span> Best route</div>
@@ -35,11 +43,31 @@
   <div class="leaflet-control-container">
     <div class="leaflet-top leaflet-left">
       <div class="leaflet-control-time leaflet-control">
-        <button id="decrement">-1 hour</button>
-        <button id="increment">+1 hour</button>
-        <button id="play">Play</button>
-        <button id="stop">Stop</button>
-        <label><input id="exposure" type="checkbox" autocomplete="off" />Full-day sun exposure</label>
+        <button id="decrement"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-skip-backward-fill" viewBox="0 0 16 16">
+            <path
+              d="M.5 3.5A.5.5 0 0 0 0 4v8a.5.5 0 0 0 1 0V8.753l6.267 3.636c.54.313 1.233-.066 1.233-.697v-2.94l6.267 3.636c.54.314 1.233-.065 1.233-.696V4.308c0-.63-.693-1.01-1.233-.696L8.5 7.248v-2.94c0-.63-.692-1.01-1.233-.696L1 7.248V4a.5.5 0 0 0-.5-.5" />
+          </svg></button>
+        <button id="stop"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-stop-fill" viewBox="0 0 16 16">
+            <path
+              d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5" />
+          </svg></button>
+        <button id="play"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-play-fill" viewBox="0 0 16 16">
+            <path
+              d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
+          </svg></button>
+
+        <button id="increment"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-skip-forward-fill" viewBox="0 0 16 16">
+            <path
+              d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.753l-6.267 3.636c-.54.313-1.233-.066-1.233-.697v-2.94l-6.267 3.636C.693 12.703 0 12.324 0 11.693V4.308c0-.63.693-1.01 1.233-.696L7.5 7.248v-2.94c0-.63.693-1.01 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5" />
+          </svg></button>
+
+
+
+        <!-- <label><input id="exposure" type="checkbox" autocomplete="off" />Full-day sun exposure</label> -->
         <span id="loader" style="padding: 3px;"></span>
       </div>
       <div class="leaflet-control-time leaflet-control" id="exposure-gradient-container">
@@ -143,12 +171,14 @@
       return marker;
     }
 
-    addImageMarker(33.424564, -111.938953, 'assets/sporky.png', {
-      iconSize: [48, 48],
+    addImageMarker(33.424564, -111.938953, 'assets/water-circle.png', {
+      iconSize: [64, 64],
       iconAnchor: [24, 48],
       popupText: 'Sporky the Sun Devil',
       zIndexOffset: 1000
     });
+
+
 
     function stopBaseClock() {
       if (baseTimerId) {
@@ -192,7 +222,7 @@
                 const line = turf.polygonToLine({ type: 'Feature', properties: {}, geometry: g });
                 if (line.type === 'Feature') BUILDING_LINES.push(line);
                 if (line.type === 'FeatureCollection') BUILDING_LINES.push(...line.features);
-              } catch (_) {}
+              } catch (_) { }
             }
           });
           geojson.features.forEach(feature => {
@@ -227,7 +257,7 @@
               const line = turf.polygonToLine({ type: 'Feature', properties: {}, geometry: g });
               if (line.type === 'Feature') BUILDING_LINES.push(line);
               if (line.type === 'FeatureCollection') BUILDING_LINES.push(...line.features);
-            } catch (_) {}
+            } catch (_) { }
           }
         });
         return true;
@@ -275,7 +305,7 @@
         if (shadeMap && typeof shadeMap.getShadowFeatures === 'function') {
           shadowFeatures = shadeMap.getShadowFeatures();
         }
-      } catch (_) {}
+      } catch (_) { }
 
       if (shadowFeatures && shadowFeatures.features && shadowFeatures.features.length) {
         let inShadow = 0;
@@ -289,7 +319,7 @@
                 inShadow++;
                 break;
               }
-            } catch (_) {}
+            } catch (_) { }
           }
           total++;
         }
@@ -311,7 +341,7 @@
             if (snapped && snapped.properties && typeof snapped.properties.dist === 'number') {
               if (snapped.properties.dist < best) best = snapped.properties.dist;
             }
-          } catch (_) {}
+          } catch (_) { }
         }
         if (isFinite(best)) { total += best; count++; }
       }
@@ -363,7 +393,7 @@
       drawRoutes(result, preferShade);
     }
 
-    window.initGoogle = function() {
+    window.initGoogle = function () {
       // called by Google JS API once loaded
       directionsService = new google.maps.DirectionsService();
       const acOptions = { fields: ["geometry", "name", "formatted_address"], componentRestrictions: { country: "us" } };
@@ -410,7 +440,7 @@
       try {
         const result = await requestRoutes(origin, destination);
         lastDirectionsResult = result;
-        await renderRoutesWithShade(result, preferShadeChk.checked);
+        await renderRoutesWithShade(result,preferShadeChk.value==='Shade');
         loaderEl.innerText = '';
       } catch (err) {
         console.error(err);
@@ -424,7 +454,7 @@
     preferShadeChk.addEventListener('change', async () => {
       if (lastDirectionsResult) {
         loaderEl.innerText = 'Scoring...';
-        await renderRoutesWithShade(lastDirectionsResult, preferShadeChk.checked);
+        await renderRoutesWithShade(lastDirectionsResult, preferShadeChk.value !=='Shade');
         loaderEl.innerText = '';
       }
     });
@@ -497,8 +527,8 @@
   </script>
 </body>
 
-  <div id="sporky-gif">
-    <img src="sporky.gif" alt="Sporky Mascot" />
-  </div>
+<div id="sporky-gif">
+  <img src="sporky.gif" alt="Sporky Mascot" />
+</div>
 
 </html>
