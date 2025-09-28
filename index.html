@@ -137,6 +137,7 @@
   </div>
 
   <script>
+    
     /* Leaflet setup */
     var map = L.map("mapid", { zoomControl: false }).setView([47.6062, -122.3321], 14); // fallback Seattle
     const increment = document.getElementById('increment');
@@ -231,6 +232,7 @@
         updateTimeDisplay();
       }, 60000);
     }
+
     function stopBaseClock() {
       if (baseTimerId) {
         clearInterval(baseTimerId);
@@ -293,12 +295,7 @@
       loaderEl.innerText = '';
     });
 
-    addImageMarker(33.424564, -111.928001, 'assets/sporky.png', {
-      iconSize: [48, 48],
-      iconAnchor: [24, 48],
-      
-    });
-
+    
     async function fetchBuildingsForBounds(north, south, east, west) {
       try {
         const query = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(way["building"](${south},${west},${north},${east}););out body;>;out skel qt;`;
@@ -323,6 +320,12 @@
         return false;
       }
     }
+
+   
+      
+      
+    
+    
 
     function decodeRouteToLatLngs(route) {
       if (route.overview_path && route.overview_path.length) {
@@ -413,6 +416,12 @@
     function drawRoutes(result, preferShade) {
       clearRoutes();
       if (!result || !result.routes || !result.routes.length) return;
+
+      const line = L.polyline(c.latlngs, {
+          color: '#1976d2',
+          weight: 4,
+          opacity:0.95
+        }).addTo(map);
 
       const candidates = result.routes.map((r, idx) => {
         const ll = decodeRouteToLatLngs(r);
