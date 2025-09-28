@@ -142,6 +142,13 @@
       return marker;
     }
 
+    addImageMarker(33.424564, -111.938953, 'assets/sporky.png', {
+      iconSize: [48, 48],
+      iconAnchor: [24, 48],
+      popupText: 'Sporky the Sun Devil',
+      zIndexOffset: 1000
+    });
+
     function stopBaseClock() {
       if (baseTimerId) {
         clearInterval(baseTimerId);
