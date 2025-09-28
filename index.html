@@ -137,7 +137,6 @@
   </div>
 
   <script>
-    
     /* Leaflet setup */
     var map = L.map("mapid", { zoomControl: false }).setView([47.6062, -122.3321], 14); // fallback Seattle
     const increment = document.getElementById('increment');
@@ -158,46 +157,6 @@
     let BUILDING_LINES = []; // turf LineString features from OSM building polygons
     let drawnRoutes = [];    // Leaflet polylines for current routes
     let directionsService;   // Google Directions service instance
-
-    // Base map layer
-    async function addImageMarker(lat, lng, imageUrl, opts = {}) {
-      const {
-        iconSize = [32, 32],
-        iconAnchor = [16, 32],
-        popupText,
-        pane = 'markerPane',
-        zIndexOffset = 0,
-        draggable = false,
-        className
-      } = opts;
-
-      if (pane !== 'markerPane' && !map.getPane(pane)) {
-        map.createPane(pane);
-        map.getPane(pane).style.zIndex = 650;
-      }
-
-      const popupAnchor = [0, -Math.max(0, iconSize[1] - iconAnchor[1])];
-
-      const icon = L.icon({
-        iconUrl: imageUrl,
-        iconSize,
-        iconAnchor,
-        popupAnchor,
-        className
-      });
-
-      const marker = L.marker([lat, lng], {
-        icon,
-        pane,
-        zIndexOffset,
-        draggable
-      }).addTo(map);
-
-      if (popupText) marker.bindPopup(popupText);
-
-      return marker;
-    }
-
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
@@ -232,7 +191,6 @@
         updateTimeDisplay();
       }, 60000);
     }
-
     function stopBaseClock() {
       if (baseTimerId) {
         clearInterval(baseTimerId);
@@ -295,7 +253,6 @@
       loaderEl.innerText = '';
     });
 
-    
     async function fetchBuildingsForBounds(north, south, east, west) {
       try {
         const query = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(way["building"](${south},${west},${north},${east}););out body;>;out skel qt;`;
@@ -320,12 +277,6 @@
         return false;
       }
     }
-
-   
-      
-      
-    
-    
 
     function decodeRouteToLatLngs(route) {
       if (route.overview_path && route.overview_path.length) {
@@ -416,12 +367,6 @@
     function drawRoutes(result, preferShade) {
       clearRoutes();
       if (!result || !result.routes || !result.routes.length) return;
-
-      const line = L.polyline(c.latlngs, {
-          color: '#1976d2',
-          weight: 4,
-          opacity:0.95
-        }).addTo(map);
 
       const candidates = result.routes.map((r, idx) => {
         const ll = decodeRouteToLatLngs(r);
