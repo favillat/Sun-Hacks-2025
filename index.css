@@ -11,17 +11,18 @@ body {
 
 .leaflet-control-time.leaflet-control {
     display: flex;
-    direction: row;
+    justify-content: space-evenly;
     flex-direction: row;
     margin-top: 300px;
-    padding: 20px;
+    margin-left: auto;
+    padding: 10px 20px;
     border-radius: 10px;
+
+    width: 90%;
     background-color: rgba(240, 240, 240, 0.95);
 }
 
-.leaflet-control-time button {
-    padding: 1px;
-}
+
 
 #exposure-gradient-container {
     display: none;
@@ -60,6 +61,9 @@ select:focus{
     border: none;
     outline: none;
 }
+
+
+
 
 .sun-exposure-control{
     display: flex;
@@ -131,7 +135,7 @@ select:focus{
     background-color: transparent;
     border: none;
     cursor: pointer;
-    margin: 0 1px;
+    margin: 0 0px;
     padding: 7px 8px;
     border-radius: 5px;
 }
