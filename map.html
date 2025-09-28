@@ -91,6 +91,16 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
     .legend .swatch { display:inline-block; width:14px; height:14px; margin-right:6px; vertical-align:middle; }
+    #sporky-gif {
+      position: absolute;
+      bottom: 70px; /* slightly above legend */
+      left: 10px;
+      z-index: 1001;
+    }
+    #sporky-gif img {
+      width: 80px;
+      height: auto;
+    }
   </style>
   <title>Live Sunlight, Shadows, and Routes</title>
 </head>
@@ -99,7 +109,7 @@
   <div id="time-display"></div>
   <div class="route-controls">
     <strong>Route planner</strong>
-    <input id="start-input" type="text" placeholder="Start, e.g., Tooker House ASU" />
+    <input id="start-input" type="text" placeholder="Start, e.g., SDFC ASU" />
     <input id="end-input" type="text" placeholder="End, e.g., Hayden Library ASU" />
     <label><input id="prefer-shade" type="checkbox" checked /> Prefer shade</label>
     <button id="route-btn">Find walking routes</button>
@@ -527,5 +537,9 @@
     });
   </script>
 </body>
+
+  <div id="sporky-gif">
+    <img src="sporky.gif" alt="Sporky Mascot" />
+  </div>
 
 </html>
