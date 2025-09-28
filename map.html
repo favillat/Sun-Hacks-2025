@@ -158,6 +158,46 @@
     let drawnRoutes = [];    // Leaflet polylines for current routes
     let directionsService;   // Google Directions service instance
 
+    // Base map layer
+    async function addImageMarker(lat, lng, imageUrl, opts = {}) {
+      const {
+        iconSize = [32, 32],
+        iconAnchor = [16, 32],
+        popupText,
+        pane = 'markerPane',
+        zIndexOffset = 0,
+        draggable = false,
+        className
+      } = opts;
+
+      if (pane !== 'markerPane' && !map.getPane(pane)) {
+        map.createPane(pane);
+        map.getPane(pane).style.zIndex = 650;
+      }
+
+      const popupAnchor = [0, -Math.max(0, iconSize[1] - iconAnchor[1])];
+
+      const icon = L.icon({
+        iconUrl: imageUrl,
+        iconSize,
+        iconAnchor,
+        popupAnchor,
+        className
+      });
+
+      const marker = L.marker([lat, lng], {
+        icon,
+        pane,
+        zIndexOffset,
+        draggable
+      }).addTo(map);
+
+      if (popupText) marker.bindPopup(popupText);
+
+      return marker;
+    }
+
+
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         'Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -251,6 +291,12 @@
 
     shadeMap.on('tileloaded', () => {
       loaderEl.innerText = '';
+    });
+
+    addImageMarker(33.424564, -111.928001, 'assets/sporky.png', {
+      iconSize: [48, 48],
+      iconAnchor: [24, 48],
+      
     });
 
     async function fetchBuildingsForBounds(north, south, east, west) {
