@@ -14,7 +14,7 @@
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAooLbj4D5s7PWTL5-Q_j1Pl7VN7NzKdHY&libraries=places,geometry&callback=initGoogle"></script>
   <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
-
+  
   <title>Live Sunlight, Shadows, and Routes</title>
 </head>
 
@@ -170,14 +170,83 @@
       return marker;
     }
 
-    addImageMarker(33.424564, -111.938953, 'assets/water-circle.png', {
-      iconSize: [64, 64],
-      iconAnchor: [24, 48],
-      popupText: 'Sporky the Sun Devil',
-      zIndexOffset: 1000
-    });
+    function drawWater() {
+      fetch('./waterStations.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(jsonData => {
+          for (let i = 0; i < jsonData.features.length; i++) {
+            if (jsonData.features[i].geometry.y !== "NaN") {
+              addImageMarker(jsonData.features[i].geometry.y, jsonData.features[i].geometry.x, 'assets/water-circle.png', {
+                iconSize: [48, 48],
+                iconAnchor: [24, 48],
+                popupText: 'water',
+                zIndexOffset: 1001
+              });
+            }
+            
+          }
+        })
+        .catch(error => { console.error('Error fetching or parsing JSON:'.error); })
+    }
 
+    drawWater()
 
+    function drawEmer() {
+      fetch('./emergencyCallBoxes.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(jsonData => {
+          for (let i = 0; i < jsonData.features.length; i++) {
+            if (jsonData.features[i].geometry.y !== "NaN") {
+              addImageMarker(jsonData.features[i].geometry.y, jsonData.features[i].geometry.x, 'assets/emergency_pin.png', {
+                iconSize: [48, 48],
+                iconAnchor: [24, 48],
+                popupText: 'emer',
+                zIndexOffset: 1001
+              });
+            }
+
+          }
+        })
+        .catch(error => { console.error('Error fetching or parsing JSON:'.error); })
+    }
+
+    drawEmer()
+
+    function drawPolice() {
+      fetch('./policeStations.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(jsonData => {
+          for (let i = 0; i < jsonData.features.length; i++) {
+            if (jsonData.features[i].geometry.y !== "NaN") {
+              addImageMarker(jsonData.features[i].geometry.y, jsonData.features[i].geometry.x, 'assets/police_pin.png', {
+                iconSize: [48, 48],
+                iconAnchor: [24, 48],
+                popupText: 'popo',
+                zIndexOffset: 1001
+              });
+            }
+
+          }
+        })
+        .catch(error => { console.error('Error fetching or parsing JSON:'.error); })
+    }
+
+    drawPolice()
 
     function stopBaseClock() {
       if (baseTimerId) {

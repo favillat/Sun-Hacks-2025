@@ -30,6 +30,7 @@ with open("waterStations.json", 'r', encoding='utf-8') as f:
         if buildingName is None:
             print(feature, "\n") 
 
+
 # Gets Emergency Call Boxes
 fetch_all_services(4, "emergencyCallBoxes.json")
 
